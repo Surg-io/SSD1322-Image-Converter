@@ -18,7 +18,7 @@ An example of a converter can be found [here](https://www.resizepixel.com/)
 
 ### 3. Run the image through the Python Code
 
-Now that you have the image as the same resolution as your screen, you can run the image through the code to get the respective array buffer full of pixel values. You can choose to have the filter allow certain pixels to be greyscaled based on the original image, or simply have a pixel be marked as on or off. The choice is up to you
+Now that you have the image as the same resolution as your screen, you can run the image through the code to get the respective array buffer full of pixel values. You can choose to have the filter allow respective pixels to be greyscaled based on the original image, or simply have a pixel be marked as on or off. The choice is up to you
 
 ### 4. Final Steps
 
