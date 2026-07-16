@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
-img = Image.open("C:\\Users\\Sergio Mendieta\\Downloads\\Images\\25664.png") #Pass the path to the png as the argument. Don't forget \\!
+img = Image.open("") #Pass the path to the png as the argument. Don't forget \\!
 
 Greyscale = False #Set to False if you want a pixels value to be either ON(0xF) or OFF (0x0)
 
