@@ -1,0 +1,1 @@
+1. Say for example you want to put a logo. Lets say you get the logo down to 60 pixels, but to make it look nice, its 72x60. Code only accounts for 256x64 pictues, so the code needs to be adjusted.
