@@ -8,7 +8,7 @@ screensizewidth = 256
 screensizeheight = 64
 
 
-img = Image.open("C:\\Users\\Sergio Mendieta\\Downloads\\One.png") #Pass the path to the png as the argument. Don't forget \\!
+img = Image.open("") #Pass the path to the png as the argument. Don't forget \\!
 
 width, height = img.size
 
