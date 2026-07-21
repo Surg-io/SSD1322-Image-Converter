@@ -44,7 +44,7 @@ else:
 
 
 
-#If the image is not 256x64(becuase it was smaller res, and we never rescaled it), we can paste it to a 256x64 canvas
+#If the image is not 256x64(becuase it was smaller res, and we never rescaled it up, not that I have added this functionality yet), we can paste it to a 256x64 canvas, or whatever your screensize happens to be
 if img.width != screensizewidth or img.height != screensizeheight:
     canvas = Image.new("L", (screensizewidth, screensizeheight), 255)  # 136
     x = (screensizewidth - img.width) // 2 #Centers the image
@@ -64,10 +64,8 @@ else:
     img = np.array(img)
     img = img * 15 #Sets each value to be either 0 or 15
     img = 15 - img  # White is now 0, blue is now the range
-
-print(img.shape)
-
-#Show your image to see what it looks like by removing the # on line 27
+    
+#Show your image to see what it looks like up to this point by removing the # on line 27
 plt.imshow(img, cmap="Blues")
 plt.colorbar()
 #plt.show()
@@ -76,18 +74,18 @@ bufferw = screensizewidth // 2
 bufferh = screensizeheight
 
 
-#Doens't work if width if graphic is an odd number. We eventually build the string later assuming even number so a byte can be passed.
+#Doens't work if width if graphic is an odd number. The string buffer we end up printing later assumes an even number width size so each two columns can be assigned to a byte
 if OnlyGraphic:
-    ys, xs = np.where(img != 0)
-    bbox = (
-        xs.min(),  # left
+    ys, xs = np.where(img != 0) #Get rows and columns that are populated with values
+    bbox = ( #Of populated rows and columns, get the min and max of each
+        xs.min(),  # left 
         ys.min(),  # top
         xs.max() + 1,  # right
         ys.max() + 1  # bottom
     )
     left,top,right,bottom = bbox
-    img = img[top:bottom, left:right] #Cropped version of the buffer such that it only contains the graphic with no buffer
-    # In the case that width is odd, lets add another row in the middle that is a copy of the middle to make it vertically symmetrical
+    img = img[top:bottom, left:right] #Cropped version of the screen buffer such that it only contains the graphic with no padding
+    # In the case that graphic is an odd pixel width, lets add a copy of the middle row to the middle to make it vertically symmetrical
     if img.shape[1] % 2 == 1:
         middle = img.shape[1] // 2
         img = np.insert(img, middle, img[:, middle], axis=1) #img[:,middle], means get all rows at column 'middle'. Axis is insert as column.
@@ -106,7 +104,7 @@ newbuf = [[0 for _ in range(bufferw)] for _ in range(bufferh)]
 
 for i in range(bufferh):
     for j in range(bufferw):
-        newbuf[i][j] = hexbuf[i][j*2] + hexbuf[i][(j*2)+1] #Couple pairs of single hex values to create bytes of data.
+        newbuf[i][j] = hexbuf[i][j*2] + hexbuf[i][(j*2)+1] #Combine pairs of single hex values to create hex bytes of data.
 
 #Reconstruct to double check (Reverse the process, from hex to its original 0-15 value)
 reconstruct = np.zeros((bufferh,bufferw * 2), dtype=np.uint8)
@@ -123,7 +121,7 @@ if np.array_equal(img, reconstruct):
 else:
     print("ERROR: Reconstruction mismatch")
 
-output = reconstruct * 17 #Translate the 0-15 value to a 0-255 value so
+output = reconstruct * 17 #Translate the 0-15 value to a 0-255 value so the library can generate the png correctly
 
 output_img = Image.fromarray(output, mode="L")
 
@@ -132,7 +130,7 @@ output_img.save("reconstructed.png")
 #Hopefully by this step, the image reconstructs! Let's print newbuf in a way that we can copy and paste in a .c file
 flat = np.array(newbuf).flatten()
 
-#Should be 8192 for 256x64
+#Should be 8192 for 256x64. Will vary when generating bitmaps for graphics
 print(np.array(newbuf).size)
 
 print("const char image[] = {")
