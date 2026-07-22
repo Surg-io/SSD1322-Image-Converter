@@ -33,6 +33,10 @@ Now that you have the image as the same resolution as your screen, you can run t
 
 You can also choose to print a bitmap of a graphic. If you would rather have a bitmap of a graphic than a buffer for the whole screen that includes said graphic, simply have ```OnlyGraphic = True```
 
+*The representation of the buffer printed with the OnlyGraphic boolean being False and True, respectively.*
+![OnlyGraphicFalse](/Examples/Aesthetix/Numbers/NumberInScreen.png)
+![OnlyGraphicTrue](/Examples/Aesthetix/Numbers/NumberBitmap.png)
+
 ### 4. Final Steps
 
 Assuming you know how to display to your OLED screen using SSD1322 commands, you can simply have a for loop that runs through the generated buffer to print out to your screen. Some psudocode for the NHD 2.8 25664 would look something along the lines of 
