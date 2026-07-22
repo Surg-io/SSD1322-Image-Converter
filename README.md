@@ -34,7 +34,7 @@ Now that you have the image as the same resolution as your screen, you can run t
 You can also choose to print a bitmap of a graphic. If you would rather have a bitmap of a graphic than a buffer for the whole screen that includes said graphic, simply have ```OnlyGraphic = True```
 
 *The representation of the buffer printed with the OnlyGraphic boolean being False and True, respectively.*
-![OnlyGraphicFalse](/Examples/Aesthetix/Numbers/NumberInScreen.png)
+![OnlyGraphicFalse](/Examples/Aesthetix/Numbers/NumberInScreen.png)</br>
 ![OnlyGraphicTrue](/Examples/Aesthetix/Numbers/NumberBitmap.png)
 
 ### 4. Final Steps
