@@ -1244,6 +1244,7 @@ void DrawOneDigit(unsigned char (*ones)[13])
     int i, j;
 
     /* Top blank rows */
+ // OxoC -> 0x34
     for (i = 0; i < 12; i++)
     {
         for (j = 0; j < 128; j++)
