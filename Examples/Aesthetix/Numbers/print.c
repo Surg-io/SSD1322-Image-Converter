@@ -1243,55 +1243,57 @@ void DrawOneDigit(unsigned char (*ones)[13])
 {
     int i, j;
 
-    /* Top blank rows */
- // OxoC -> 0x34
-    for (i = 0; i < 12; i++)
-    {
-        for (j = 0; j < 128; j++)
-            Snd_Disp_word(0x00, 1);
-    }
+    //Current Commented out portions are to test the speed of simply printing the area of the numbers than the whole buffer
+//    /* Top blank rows */
+//    for (i = 0; i < 12; i++)
+//    {
+//        for (j = 0; j < 128; j++)
+//            Snd_Disp_word(0x00, 1);
+//    }
 
     /* Digit rows */
+    //Current Range may not be centered to ensure that the offset is a dividend of 4(1 Col address = 4 pixels)
     for (i = 0; i < 40; i++)
     {
-        /* Left blank */
-        for (j = 0; j < 58; j++)
-            Snd_Disp_word(0x00, 1);
+//        /* Left blank */
+//        for (j = 0; j < 58; j++)
+//            Snd_Disp_word(0x00, 1);
 
         /* Digit */
         for (j = 0; j < 13; j++)
             Snd_bitmap(&ones[i][j], 1);
+        Snd_Disp_word(0x00, 1); // So the column commits a wrap around
 
-        /* Right blank */
-        for (j = 0; j < 57; j++)
-            Snd_Disp_word(0x00, 1);
+//        /* Right blank */
+//        for (j = 0; j < 57; j++)
+//            Snd_Disp_word(0x00, 1);
     }
 
-    /* Bottom blank rows */
-    for (i = 0; i < 12; i++)
-    {
-        for (j = 0; j < 128; j++)
-            Snd_Disp_word(0x00, 1);
-    }
+//    /* Bottom blank rows */
+//    for (i = 0; i < 12; i++)
+//    {
+//        for (j = 0; j < 128; j++)
+//            Snd_Disp_word(0x00, 1);
+//    }
 }
 
 void DrawTwoDigits(unsigned char (*tens)[13], unsigned char (*ones)[13])
 {
     int i, j;
 
-    /* Top blank rows */
-    for (i = 0; i < 12; i++)
-    {
-        for (j = 0; j < 128; j++)
-            Snd_Disp_word(0x00, 1);
-    }
+//    /* Top blank rows */
+//    for (i = 0; i < 12; i++)
+//    {
+//        for (j = 0; j < 128; j++)
+//            Snd_Disp_word(0x00, 1);
+//    }
 
     /* Digit rows */
     for (i = 0; i < 40; i++)
     {
-        /* Left blank */
-        for (j = 0; j < 48; j++)
-            Snd_Disp_word(0x00, 1);
+//        /* Left blank */
+//        for (j = 0; j < 48; j++)
+//            Snd_Disp_word(0x00, 1);
 
         /* Tens digit */
         for (j = 0; j < 13; j++)
@@ -1305,17 +1307,17 @@ void DrawTwoDigits(unsigned char (*tens)[13], unsigned char (*ones)[13])
         for (j = 0; j < 13; j++)
             Snd_bitmap(&ones[i][j], 1);
 
-        /* Right blank */
-        for (j = 0; j < 48; j++)
-            Snd_Disp_word(0x00, 1);
+//        /* Right blank */
+//        for (j = 0; j < 48; j++)
+//            Snd_Disp_word(0x00, 1);
     }
 
-    /* Bottom blank rows */
-    for (i = 0; i < 12; i++)
-    {
-        for (j = 0; j < 128; j++)
-            Snd_Disp_word(0x00, 1);
-    }
+//    /* Bottom blank rows */
+//    for (i = 0; i < 12; i++)
+//    {
+//        for (j = 0; j < 128; j++)
+//            Snd_Disp_word(0x00, 1);
+//    }
 }
 
 
@@ -1406,8 +1408,7 @@ void Setup_Disp(void )    // Setup OLED Controller
    
     Snd_Disp_word(0xAF,0); // Display ON
     //Test Image - Lines
-    
-    Snd_Disp_word(0x5C,0);
+     Snd_Disp_word(0x5C,0); //Set Data Command
     //Clear
     /*
      * for (int i = 0;i<64;++i) //Rows
@@ -1420,7 +1421,7 @@ void Setup_Disp(void )    // Setup OLED Controller
     }
      */
     
-    /*
+    
      for (int i = 0;i<64;++i) //Rows
     {
         for (int j = 0;j<128;++j) // Col addresses
@@ -1436,7 +1437,7 @@ void Setup_Disp(void )    // Setup OLED Controller
         };
     };
      
-     */
+     
      
     
 //    
@@ -1448,8 +1449,6 @@ void Setup_Disp(void )    // Setup OLED Controller
     int currnum = 0;
     char (*tens)[13] = zero;
     char (*ones)[13] = zero;
-    int row = 0;
-    int print = 0;
 //Original Number Cycle
 
 //    while (1)
@@ -1510,10 +1509,47 @@ void Setup_Disp(void )    // Setup OLED Controller
 //            currnum = 0;
 //        }
 //    }
-//New Number Cycle
+//New Number 
+    int small = 0;
+    int prev = 0;
     while (1)
 {
-    if (currnum < 10)
+        if (currnum < 10)
+        {
+            small = 1;
+        }
+        else
+        {
+            small= 0;
+        }
+    if (small != prev) //Set Bounds for single digit
+    {
+        if (small)
+        {
+            Snd_Disp_word(0x15,0);//Set Columns Address
+        Snd_Disp_word(0x39,1);//(Start)
+        Snd_Disp_word(0x40,1); // (End)
+    
+        Snd_Disp_word(0x75,0); // Set Row Address
+        Snd_Disp_word(0x0C,1);
+        Snd_Disp_word(0x34,1);
+        }
+        else
+        {
+            //Double Digit
+        Snd_Disp_word(0x15,0);//Set Columns Address
+        Snd_Disp_word(0x34,1);//(Start)
+        Snd_Disp_word(0x44,1); // (End)
+    
+        Snd_Disp_word(0x75,0); // Set Row Address
+        Snd_Disp_word(0x0C,1);
+        Snd_Disp_word(0x34,1);
+        }
+        prev = small;
+        Snd_Disp_word(0x5C,0); //Send Data Command
+      }
+        
+    if (small)
     {
         ones = getArray(currnum);
         DrawOneDigit(ones);
@@ -1528,7 +1564,11 @@ void Setup_Disp(void )    // Setup OLED Controller
     currnum++;
 
     if (currnum == 89)
+    {
         currnum = 0;
+        small = 1;
+    }
+        
 }
 
     N_SEL_Disp1 = 1; //CS - None
